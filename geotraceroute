@@ -1,0 +1,13 @@
+#!/bin/bash
+
+IPS=$(traceroute $1 | \
+	 sed -r 's/[\(\)]//g' | \
+	 grep -v '\*'| \
+	 sed 1,2d | \
+	 awk '{print $3}')
+
+for i in $IPS; do
+	echo $i - $(geoiplookup $i)
+	echo $i - $(geoiplookup -f /usr/share/GeoIP/GeoLiteCity.dat $i)
+	echo
+done
